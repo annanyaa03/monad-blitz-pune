@@ -99,27 +99,27 @@ export default function ManualTrading({ state }: { state?: SharedState }) {
   }, [isConfirmed]);
 
   return (
-    <div className="bg-white rounded-3xl border border-[#E5E7EB] p-6 shadow-sm flex flex-col relative overflow-hidden h-full">
+    <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col relative overflow-hidden h-full">
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-semibold text-lg flex items-center gap-2">
-          <ArrowRightLeft size={18} className="text-[#836EF9]" />
+          <ArrowRightLeft size={18} className="text-accent" />
           Manual Execution
         </h3>
-        <button className="text-[#6B7280] hover:text-[#111111] transition-colors">
+        <button className="text-muted hover:text-foreground transition-colors">
           <Settings2 size={18} />
         </button>
       </div>
 
-      <div className="flex bg-[#F3F4F6] p-1 rounded-xl mb-6">
+      <div className="flex bg-muted/10 p-1 rounded-xl mb-6">
         <button 
           onClick={() => setTradeType("BUY")}
-          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${tradeType === "BUY" ? "bg-white text-[#16A34A] shadow-sm" : "text-[#6B7280]"}`}
+          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${tradeType === "BUY" ? "bg-card text-success shadow-sm" : "text-muted"}`}
         >
           Buy MONAD
         </button>
         <button 
           onClick={() => setTradeType("SELL")}
-          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${tradeType === "SELL" ? "bg-white text-[#DC2626] shadow-sm" : "text-[#6B7280]"}`}
+          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${tradeType === "SELL" ? "bg-card text-danger shadow-sm" : "text-muted"}`}
         >
           Sell MONAD
         </button>
@@ -128,13 +128,13 @@ export default function ManualTrading({ state }: { state?: SharedState }) {
       <div className="space-y-4 flex-1">
         <div>
           <div className="flex justify-between items-end mb-2">
-            <label className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider block">Amount</label>
+            <label className="text-xs font-semibold text-muted uppercase tracking-wider block">Amount</label>
             <div className="flex gap-1">
               {[25, 50, 75, 100].map(pct => (
                 <button 
                   key={pct} 
                   onClick={() => handlePercentage(pct)}
-                  className="text-[10px] font-medium bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#6B7280] px-2 py-0.5 rounded"
+                  className="text-[10px] font-medium bg-muted/10 hover:bg-border text-muted px-2 py-0.5 rounded"
                 >
                   {pct}%
                 </button>
@@ -147,22 +147,22 @@ export default function ManualTrading({ state }: { state?: SharedState }) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-xl px-4 py-3 text-xl font-mono focus:outline-none focus:ring-2 focus:ring-[#836EF9]/50 transition-all"
+              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xl font-mono focus:outline-none focus:ring-2 focus:ring-[#836EF9]/50 transition-all"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <span className="text-[#6B7280] text-sm font-medium">{tradeType === "BUY" ? "USDC" : "MONAD"}</span>
+              <span className="text-muted text-sm font-medium">{tradeType === "BUY" ? "USDC" : "MONAD"}</span>
             </div>
           </div>
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-2 block">Slippage Tolerance</label>
+          <label className="text-xs font-semibold text-muted uppercase tracking-wider mb-2 block">Slippage Tolerance</label>
           <div className="flex gap-2">
             {["0.1", "0.5", "1.0"].map((val) => (
               <button 
                 key={val}
                 onClick={() => setSlippage(val)}
-                className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-colors ${slippage === val ? "border-[#836EF9] bg-[#836EF9]/5 text-[#836EF9]" : "border-[#E5E7EB] text-[#6B7280]"}`}
+                className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-colors ${slippage === val ? "border-accent bg-accent/5 text-accent" : "border-border text-muted"}`}
               >
                 {val}%
               </button>
@@ -172,29 +172,29 @@ export default function ManualTrading({ state }: { state?: SharedState }) {
                 type="number"
                 value={slippage}
                 onChange={(e) => setSlippage(e.target.value)}
-                className="w-full h-full border border-[#E5E7EB] rounded-lg px-3 text-sm text-center focus:outline-none focus:border-[#836EF9]"
+                className="w-full h-full border border-border rounded-lg px-3 text-sm text-center focus:outline-none focus:border-accent"
               />
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[#6B7280]">%</span>
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted">%</span>
             </div>
           </div>
         </div>
 
         {/* Trade Details */}
-        <div className="bg-[#F9FAFB] rounded-xl p-3 text-xs space-y-2 border border-[#F3F4F6]">
+        <div className="bg-[#F9FAFB] rounded-xl p-3 text-xs space-y-2 border border-border">
           <div className="flex justify-between">
-            <span className="text-[#6B7280]">Current Price</span>
+            <span className="text-muted">Current Price</span>
             <span className="font-mono font-medium">${currentMonadPrice > 0 ? currentMonadPrice.toFixed(4) : "---"}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-[#6B7280]">Est. Received</span>
+            <span className="text-muted">Est. Received</span>
             <span className="font-mono font-medium">{estimatedReceived > 0 ? estimatedReceived.toFixed(6) : "0.00"} {tradeType === "BUY" ? "MONAD" : "USDC"}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-[#6B7280]">Price Impact</span>
-            <span className="font-mono font-medium text-[#16A34A]">&lt; 0.01%</span>
+            <span className="text-muted">Price Impact</span>
+            <span className="font-mono font-medium text-success">&lt; 0.01%</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-[#6B7280]">Network Fee</span>
+            <span className="text-muted">Network Fee</span>
             <span className="font-mono font-medium">~0.0001 MONAD</span>
           </div>
         </div>
@@ -206,7 +206,7 @@ export default function ManualTrading({ state }: { state?: SharedState }) {
           disabled={!isConnected || isPending || isConfirming || !amount || numAmount <= 0}
           className={`w-full py-4 rounded-xl font-medium text-white transition-all flex items-center justify-center gap-2 ${
             !isConnected || !amount || numAmount <= 0 ? "bg-[#D1D5DB] cursor-not-allowed" : 
-            tradeType === "BUY" ? "bg-[#16A34A] hover:bg-[#15803d]" : "bg-[#DC2626] hover:bg-[#b91c1c]"
+            tradeType === "BUY" ? "bg-success hover:bg-[#15803d]" : "bg-danger hover:bg-[#b91c1c]"
           }`}
         >
           {isPending || isConfirming ? (
@@ -226,29 +226,29 @@ export default function ManualTrading({ state }: { state?: SharedState }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-white/80 backdrop-blur-md z-30 flex flex-col p-6"
+            className="absolute inset-0 bg-card/80 backdrop-blur-md z-30 flex flex-col p-6"
           >
             <div className="flex justify-between items-center mb-6">
               <h4 className="font-semibold text-lg">Confirm Trade</h4>
-              <button onClick={() => setShowConfirm(false)} className="text-[#6B7280] hover:text-[#111111]">
+              <button onClick={() => setShowConfirm(false)} className="text-muted hover:text-foreground">
                 <X size={20} />
               </button>
             </div>
             
             <div className="flex-1 flex flex-col justify-center gap-4">
               <div className="text-center">
-                <p className="text-sm text-[#6B7280] mb-1">You are about to {tradeType.toLowerCase()}</p>
+                <p className="text-sm text-muted mb-1">You are about to {tradeType.toLowerCase()}</p>
                 <p className="text-3xl font-mono font-medium">{amount} {tradeType === "BUY" ? "USDC" : "MONAD"}</p>
               </div>
               <div className="text-center">
-                <p className="text-sm text-[#6B7280] mb-1">and receive approx.</p>
-                <p className="text-2xl font-mono font-medium text-[#836EF9]">{estimatedReceived.toFixed(6)} {tradeType === "BUY" ? "MONAD" : "USDC"}</p>
+                <p className="text-sm text-muted mb-1">and receive approx.</p>
+                <p className="text-2xl font-mono font-medium text-accent">{estimatedReceived.toFixed(6)} {tradeType === "BUY" ? "MONAD" : "USDC"}</p>
               </div>
             </div>
 
             <button 
               onClick={handleTrade}
-              className={`w-full py-4 rounded-xl font-medium text-white transition-all ${tradeType === "BUY" ? "bg-[#16A34A] hover:bg-[#15803d]" : "bg-[#DC2626] hover:bg-[#b91c1c]"}`}
+              className={`w-full py-4 rounded-xl font-medium text-white transition-all ${tradeType === "BUY" ? "bg-success hover:bg-[#15803d]" : "bg-danger hover:bg-[#b91c1c]"}`}
             >
               Confirm via Wallet
             </button>
@@ -260,28 +260,28 @@ export default function ManualTrading({ state }: { state?: SharedState }) {
       {isConfirmed && (
         <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="absolute inset-0 bg-white/95 backdrop-blur-md z-40 flex flex-col items-center justify-center p-6 text-center"
+          className="absolute inset-0 bg-card/95 backdrop-blur-md z-40 flex flex-col items-center justify-center p-6 text-center"
         >
-          <div className="w-16 h-16 bg-[#16A34A]/10 text-[#16A34A] rounded-full flex items-center justify-center mb-4">
+          <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center mb-4">
             <CheckCircle2 size={32} />
           </div>
           <h4 className="font-semibold text-lg mb-1">Trade Confirmed</h4>
-          <p className="text-sm text-[#6B7280] mb-6">Your trade was executed successfully on Monad testnet.</p>
-          <button onClick={() => { reset(); }} className="px-6 py-2 bg-[#F3F4F6] rounded-full text-sm font-medium">Continue Trading</button>
+          <p className="text-sm text-muted mb-6">Your trade was executed successfully on Monad testnet.</p>
+          <button onClick={() => { reset(); }} className="px-6 py-2 bg-muted/10 rounded-full text-sm font-medium">Continue Trading</button>
         </motion.div>
       )}
 
       {error && (
         <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="absolute inset-0 bg-white/95 backdrop-blur-md z-40 flex flex-col items-center justify-center p-6 text-center"
+          className="absolute inset-0 bg-card/95 backdrop-blur-md z-40 flex flex-col items-center justify-center p-6 text-center"
         >
-          <div className="w-16 h-16 bg-[#DC2626]/10 text-[#DC2626] rounded-full flex items-center justify-center mb-4">
+          <div className="w-16 h-16 bg-danger/10 text-danger rounded-full flex items-center justify-center mb-4">
             <AlertCircle size={32} />
           </div>
           <h4 className="font-semibold text-lg mb-1">Execution Failed</h4>
-          <p className="text-xs text-[#DC2626] mb-6 max-w-[200px] truncate">{error.message}</p>
-          <button onClick={() => { reset(); }} className="px-6 py-2 bg-[#F3F4F6] rounded-full text-sm font-medium">Dismiss</button>
+          <p className="text-xs text-danger mb-6 max-w-[200px] truncate">{error.message}</p>
+          <button onClick={() => { reset(); }} className="px-6 py-2 bg-muted/10 rounded-full text-sm font-medium">Dismiss</button>
         </motion.div>
       )}
     </div>

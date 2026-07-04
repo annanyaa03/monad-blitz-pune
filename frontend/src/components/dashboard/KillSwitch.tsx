@@ -57,11 +57,11 @@ export default function KillSwitch({ state }: { state?: SharedState }) {
     <div className="h-full flex flex-col justify-between">
       <div className="flex items-center justify-between z-10 relative">
         <div className="flex items-center gap-2">
-          <ShieldAlert className={isLocked ? "text-[#DC2626]" : "text-[#16A34A]"} size={24} />
+          <ShieldAlert className={isLocked ? "text-danger" : "text-success"} size={24} />
           <h3 className="font-semibold text-lg">KillSwitch Module</h3>
         </div>
-        <div className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 ${isLocked ? "bg-[#DC2626]/20 text-[#DC2626]" : "bg-[#16A34A]/20 text-[#16A34A]"}`}>
-          <div className={`w-1.5 h-1.5 rounded-full ${isLocked ? "bg-[#DC2626]" : "bg-[#16A34A] animate-pulse"}`} />
+        <div className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 ${isLocked ? "bg-danger/20 text-danger" : "bg-success/20 text-success"}`}>
+          <div className={`w-1.5 h-1.5 rounded-full ${isLocked ? "bg-danger" : "bg-success animate-pulse"}`} />
           {isLocked ? `LOCKED: ${ks?.status}` : "SYSTEM ACTIVE"}
         </div>
       </div>
@@ -71,15 +71,15 @@ export default function KillSwitch({ state }: { state?: SharedState }) {
           onClick={handleToggle}
           disabled={isButtonDisabled}
           className={`w-32 h-32 rounded-full border-4 flex items-center justify-center shadow-2xl transition-colors duration-500 relative z-20 ${
-            isLocked ? "border-[#DC2626] bg-[#DC2626]/10 hover:bg-[#DC2626]/20" : "border-[#333333] bg-[#1a1a1a] hover:bg-[#222]"
+            isLocked ? "border-danger bg-danger/10 hover:bg-danger/20" : "border-[#333333] bg-[#1a1a1a] hover:bg-[#222]"
           } ${isButtonDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
         >
           {isPending || isConfirming ? (
-            <Loader2 size={40} className={`animate-spin ${isLocked ? "text-[#DC2626]" : "text-[#6B7280]"}`} />
+            <Loader2 size={40} className={`animate-spin ${isLocked ? "text-danger" : "text-muted"}`} />
           ) : isLocked ? (
-            <Lock size={40} className="text-[#DC2626]" />
+            <Lock size={40} className="text-danger" />
           ) : (
-            <Unlock size={40} className="text-[#6B7280]" />
+            <Unlock size={40} className="text-muted" />
           )}
         </button>
 
@@ -111,24 +111,24 @@ export default function KillSwitch({ state }: { state?: SharedState }) {
               initial={{ width: 0 }}
               animate={{ width: `${usagePercent}%` }}
               transition={{ duration: 1, delay: 0.2 }}
-              className={`h-full ${usagePercent > 80 ? "bg-[#DC2626]" : "bg-[#836EF9]"}`}
+              className={`h-full ${usagePercent > 80 ? "bg-danger" : "bg-accent"}`}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-[#1a1a1a] rounded-xl p-3 border border-[#333333]">
-            <p className="text-[10px] text-[#6B7280] uppercase tracking-wider mb-1">Paused</p>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Paused</p>
             <p className="font-mono text-sm font-medium">{ks?.paused ? "YES" : "NO"}</p>
           </div>
           <div className="bg-[#1a1a1a] rounded-xl p-3 border border-[#333333]">
-            <p className="text-[10px] text-[#6B7280] uppercase tracking-wider mb-1">Cooldown</p>
-            <p className="font-mono text-sm font-medium text-[#16A34A]">{ks?.cooldown_seconds || 0}s</p>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Cooldown</p>
+            <p className="font-mono text-sm font-medium text-success">{ks?.cooldown_seconds || 0}s</p>
           </div>
         </div>
 
         <div className="mt-4 pt-4 border-t border-[#333333] flex justify-between items-center">
-          <span className="text-[10px] text-[#6B7280] uppercase tracking-wider">Contract Address</span>
+          <span className="text-[10px] text-muted uppercase tracking-wider">Contract Address</span>
           <span className="font-mono text-xs text-[#a1a1aa] truncate max-w-[150px]" title={state?.contracts?.killSwitch}>
             {state?.contracts?.killSwitch ? `${state.contracts.killSwitch.substring(0, 6)}...${state.contracts.killSwitch.substring(38)}` : "Not Connected"}
           </span>
@@ -136,7 +136,7 @@ export default function KillSwitch({ state }: { state?: SharedState }) {
       </div>
       
       {/* Background glow */}
-      <div className={`absolute -bottom-24 -right-24 w-64 h-64 rounded-full blur-[100px] transition-colors duration-1000 ${isLocked ? "bg-[#DC2626]/20" : "bg-[#836EF9]/10"}`} />
+      <div className={`absolute -bottom-24 -right-24 w-64 h-64 rounded-full blur-[100px] transition-colors duration-1000 ${isLocked ? "bg-danger/20" : "bg-accent/10"}`} />
     </div>
   );
 }

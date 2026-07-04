@@ -10,7 +10,7 @@ export default function OracleWidget({ state }: { state?: SharedState }) {
   const price = state?.market?.price ? state.market.price.toFixed(4) : "---";
 
   let change24h = "---";
-  let changeColor = "text-[#6B7280]";
+  let changeColor = "text-muted";
   if (state?.market?.history && state.market.history.length > 0 && state.market.price) {
     const firstPrice = state.market.history[0].price;
     const currentPrice = state.market.price;
@@ -18,7 +18,7 @@ export default function OracleWidget({ state }: { state?: SharedState }) {
       const diff = currentPrice - firstPrice;
       const pct = (diff / firstPrice) * 100;
       change24h = `${diff >= 0 ? "+" : ""}${pct.toFixed(2)}%`;
-      changeColor = diff > 0 ? "text-[#10B981]" : diff < 0 ? "text-[#EF4444]" : "text-[#6B7280]";
+      changeColor = diff > 0 ? "text-live" : diff < 0 ? "text-[#EF4444]" : "text-muted";
     }
   }
 
@@ -44,12 +44,12 @@ export default function OracleWidget({ state }: { state?: SharedState }) {
     <div className="h-full flex flex-col relative overflow-hidden">
       <div className="flex items-center justify-between z-10">
         <div className="flex items-center gap-2">
-          <Network size={20} className="text-[#836EF9]" />
+          <Network size={20} className="text-accent" />
           <h3 className="font-semibold text-lg">Pyth Oracle</h3>
         </div>
         <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${pulse ? "bg-[#16A34A]" : "bg-[#E5E7EB]"} transition-colors duration-200`} />
-          <span className="text-xs font-mono text-[#6B7280]">LIVE FEED</span>
+          <div className={`w-2 h-2 rounded-full ${pulse ? "bg-success" : "bg-border"} transition-colors duration-200`} />
+          <span className="text-xs font-mono text-muted">LIVE FEED</span>
         </div>
       </div>
 
@@ -108,13 +108,13 @@ export default function OracleWidget({ state }: { state?: SharedState }) {
           </svg>
         </div>
 
-        <div className="z-10 text-center bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-[#F3F4F6]">
-          <p className="text-xs text-[#6B7280] font-medium tracking-widest mb-1">{state?.market?.symbol || "MONAD/USDC"}</p>
+        <div className="z-10 text-center bg-card/80 backdrop-blur-sm p-4 rounded-2xl border border-border">
+          <p className="text-xs text-muted font-medium tracking-widest mb-1">{state?.market?.symbol || "MONAD/USDC"}</p>
           <motion.h4 
             key={price}
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-3xl font-mono font-medium text-[#111111] flex flex-col items-center gap-1"
+            className="text-3xl font-mono font-medium text-foreground flex flex-col items-center gap-1"
           >
             ${price}
             <span className={`text-sm ${changeColor}`}>{change24h} (24h)</span>
@@ -126,19 +126,19 @@ export default function OracleWidget({ state }: { state?: SharedState }) {
         </div>
       </div>
       
-      <div className="mt-auto pt-4 border-t border-[#F3F4F6] grid grid-cols-2 gap-4">
+      <div className="mt-auto pt-4 border-t border-border grid grid-cols-2 gap-4">
         <div>
-          <p className="text-xs text-[#6B7280]">Market Trend</p>
-          <p className={`text-sm font-medium ${state?.computed?.marketTrend === "BULLISH" ? "text-[#10B981]" : state?.computed?.marketTrend === "BEARISH" ? "text-[#EF4444]" : "text-[#6B7280]"}`}>
+          <p className="text-xs text-muted">Market Trend</p>
+          <p className={`text-sm font-medium ${state?.computed?.marketTrend === "BULLISH" ? "text-live" : state?.computed?.marketTrend === "BEARISH" ? "text-[#EF4444]" : "text-muted"}`}>
             {state?.computed?.marketTrend || "NEUTRAL"}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-[#6B7280]">Latency</p>
+          <p className="text-xs text-muted">Latency</p>
           {(() => {
-            if (!state?.market?.publish_time) return <p className="text-sm font-medium text-[#111111]">---</p>;
-            if (latency <= 5) return <p className="text-sm font-medium text-[#10B981]">Live ({latency}s ago)</p>;
-            if (latency <= 15) return <p className="text-sm font-medium text-[#F59E0B]">Refreshing...</p>;
+            if (!state?.market?.publish_time) return <p className="text-sm font-medium text-foreground">---</p>;
+            if (latency <= 5) return <p className="text-sm font-medium text-live">Live ({latency}s ago)</p>;
+            if (latency <= 15) return <p className="text-sm font-medium text-warning">Refreshing...</p>;
             return <p className="text-sm font-medium text-[#EF4444]">Stale</p>;
           })()}
         </div>

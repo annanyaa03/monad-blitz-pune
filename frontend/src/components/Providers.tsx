@@ -9,6 +9,7 @@ import { walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { AlertCircle } from "lucide-react";
 import '@rainbow-me/rainbowkit/styles.css';
 import { SessionProvider, useSession } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
 
 // We use standard monadTestnet from wagmi/chains to ensure proper balance formatting (fixes NaN MON)
 
@@ -86,15 +87,17 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SessionProvider>
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider>
-            <WalletSync />
-            {children}
-          </RainbowKitProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
-    </SessionProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <SessionProvider>
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <RainbowKitProvider showRecentTransactions={true}>
+              <WalletSync />
+              {children}
+            </RainbowKitProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
+      </SessionProvider>
+    </ThemeProvider>
   );
 }

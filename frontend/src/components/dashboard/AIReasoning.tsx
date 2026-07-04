@@ -30,32 +30,32 @@ export default function AIReasoning({ state }: { state?: SharedState }) {
 
   // Helpers for UI styling
   const getTrendIcon = () => {
-    if (marketTrend === "BULLISH") return <TrendingUp size={16} className="text-[#16A34A]" />;
-    if (marketTrend === "BEARISH") return <TrendingDown size={16} className="text-[#DC2626]" />;
-    return <Minus size={16} className="text-[#6B7280]" />;
+    if (marketTrend === "BULLISH") return <TrendingUp size={16} className="text-success" />;
+    if (marketTrend === "BEARISH") return <TrendingDown size={16} className="text-danger" />;
+    return <Minus size={16} className="text-muted" />;
   };
 
   const getRiskIcon = () => {
-    if (riskLevel === "HIGH") return <AlertTriangle size={16} className="text-[#DC2626]" />;
-    if (riskLevel === "ELEVATED") return <AlertTriangle size={16} className="text-[#F59E0B]" />;
-    return <ShieldCheck size={16} className="text-[#16A34A]" />;
+    if (riskLevel === "HIGH") return <AlertTriangle size={16} className="text-danger" />;
+    if (riskLevel === "ELEVATED") return <AlertTriangle size={16} className="text-warning" />;
+    return <ShieldCheck size={16} className="text-success" />;
   };
 
   const getActionColor = () => {
-    if (action === "BUY") return "text-[#16A34A] bg-[#16A34A]/10 border-[#16A34A]/20";
-    if (action === "SELL") return "text-[#DC2626] bg-[#DC2626]/10 border-[#DC2626]/20";
-    return "text-[#836EF9] bg-[#836EF9]/10 border-[#836EF9]/20";
+    if (action === "BUY") return "text-success bg-success/10 border-success/20";
+    if (action === "SELL") return "text-danger bg-danger/10 border-danger/20";
+    return "text-accent bg-accent/10 border-accent/20";
   };
 
   return (
     <div className="flex-1 flex flex-col p-6 h-full min-h-[400px] text-white">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <BrainCircuit className="text-[#836EF9]" size={20} />
+          <BrainCircuit className="text-accent" size={20} />
           <h3 className="font-semibold text-lg text-white">AI Reasoning</h3>
         </div>
-        <div className="flex items-center gap-2 text-xs font-medium bg-[#1A1A1A] text-white px-2 py-1 rounded-full border border-[#333]">
-          <Activity size={12} className="text-[#16A34A] animate-pulse" />
+        <div className="flex items-center gap-2 text-xs font-medium bg-[#1A1A1A] text-white px-2 py-1 rounded-full border border-border">
+          <Activity size={12} className="text-success animate-pulse" />
           {reasoning?.status === "thinking" ? "MiniMax Thinking" : "MiniMax Idle"}
         </div>
       </div>
@@ -63,10 +63,10 @@ export default function AIReasoning({ state }: { state?: SharedState }) {
       <div className="flex-1 flex flex-col gap-6 overflow-y-auto pr-2 no-scrollbar">
         {/* Market Summary */}
         <div className="space-y-2">
-          <h4 className="text-xs uppercase tracking-wider text-[#6B7280] font-semibold flex items-center gap-2">
+          <h4 className="text-xs uppercase tracking-wider text-muted font-semibold flex items-center gap-2">
             <Info size={14} /> Market Summary
           </h4>
-          <p className="text-sm text-[#E5E7EB] font-light leading-relaxed">
+          <p className="text-sm text-muted font-light leading-relaxed">
             The market is currently exhibiting a {marketTrend.toLowerCase()} trend. 
             Technical indicators combined with real-time sentiment analysis 
             suggest a {confidence}% confidence level in the current market direction.
@@ -75,20 +75,20 @@ export default function AIReasoning({ state }: { state?: SharedState }) {
 
         {/* Dynamic Metrics */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-[#1A1A1A] border border-[#333] rounded-xl p-4">
-            <p className="text-xs text-[#6B7280] mb-1">Current Trend</p>
+          <div className="bg-[#1A1A1A] border border-border rounded-xl p-4">
+            <p className="text-xs text-muted mb-1">Current Trend</p>
             <div className="flex items-center gap-2 text-sm font-medium">
               {getTrendIcon()}
-              <span className={marketTrend === "BULLISH" ? "text-[#16A34A]" : marketTrend === "BEARISH" ? "text-[#DC2626]" : "text-[#E5E7EB]"}>
+              <span className={marketTrend === "BULLISH" ? "text-success" : marketTrend === "BEARISH" ? "text-danger" : "text-muted"}>
                 {marketTrend}
               </span>
             </div>
           </div>
-          <div className="bg-[#1A1A1A] border border-[#333] rounded-xl p-4">
-            <p className="text-xs text-[#6B7280] mb-1">Risk Assessment</p>
+          <div className="bg-[#1A1A1A] border border-border rounded-xl p-4">
+            <p className="text-xs text-muted mb-1">Risk Assessment</p>
             <div className="flex items-center gap-2 text-sm font-medium">
               {getRiskIcon()}
-              <span className={riskLevel === "HIGH" ? "text-[#DC2626]" : riskLevel === "ELEVATED" ? "text-[#F59E0B]" : "text-[#16A34A]"}>
+              <span className={riskLevel === "HIGH" ? "text-danger" : riskLevel === "ELEVATED" ? "text-warning" : "text-success"}>
                 {riskLevel}
               </span>
             </div>
@@ -97,17 +97,17 @@ export default function AIReasoning({ state }: { state?: SharedState }) {
 
         {/* Reasoning Rationale */}
         <div className="space-y-2 flex-1">
-          <h4 className="text-xs uppercase tracking-wider text-[#6B7280] font-semibold flex items-center gap-2">
+          <h4 className="text-xs uppercase tracking-wider text-muted font-semibold flex items-center gap-2">
             <BrainCircuit size={14} /> Reasoning
           </h4>
-          <div className="bg-[#111111] border border-[#333] rounded-xl p-4 text-sm text-[#9CA3AF] font-light leading-relaxed italic">
+          <div className="bg-foreground border border-border rounded-xl p-4 text-sm text-[#9CA3AF] font-light leading-relaxed italic">
             "{rationale}"
           </div>
         </div>
       </div>
       
       {/* Recommended Action */}
-      <motion.div className="mt-4 pt-4 border-t border-[#333]">
+      <motion.div className="mt-4 pt-4 border-t border-border">
         <div className={`flex justify-between items-center rounded-xl p-4 border ${getActionColor()}`}>
           <div>
             <p className="text-xs opacity-80 font-sans mb-1">Recommended Action</p>

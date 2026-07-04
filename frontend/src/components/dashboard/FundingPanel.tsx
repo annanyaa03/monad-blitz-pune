@@ -28,35 +28,35 @@ export default function FundingPanel() {
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-[#E5E7EB] p-6 shadow-sm flex flex-col h-full relative overflow-hidden min-h-[400px]">
+    <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col h-full relative overflow-hidden min-h-[400px]">
       <div className="mb-6">
         <h3 className="font-semibold text-lg">Fund Account</h3>
-        <p className="text-sm text-[#6B7280]">Deposit USDC or Fiat</p>
+        <p className="text-sm text-muted">Deposit USDC or Fiat</p>
       </div>
 
       {!isConnected ? (
         <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4">
-          <div className="w-16 h-16 bg-[#F3F4F6] rounded-full flex items-center justify-center text-[#9CA3AF] mb-2">
+          <div className="w-16 h-16 bg-muted/10 rounded-full flex items-center justify-center text-[#9CA3AF] mb-2">
             <Lock size={24} />
           </div>
           <div>
-            <h4 className="font-medium text-lg text-[#111111]">Authentication Required</h4>
-            <p className="text-sm text-[#6B7280] max-w-xs mx-auto mt-1 mb-6">Please connect your wallet to access the secure payment portal.</p>
+            <h4 className="font-medium text-lg text-foreground">Authentication Required</h4>
+            <p className="text-sm text-muted max-w-xs mx-auto mt-1 mb-6">Please connect your wallet to access the secure payment portal.</p>
           </div>
           <ConnectButton showBalance={false} />
         </div>
       ) : (
         <>
-          <div className="flex gap-2 mb-6 p-1 bg-[#F3F4F6] rounded-xl">
+          <div className="flex gap-2 mb-6 p-1 bg-muted/10 rounded-xl">
         <button 
           onClick={() => setMethod("STRIPE")}
-          className={`flex-1 py-2 flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-all ${method === "STRIPE" ? "bg-white shadow-sm text-[#111111]" : "text-[#6B7280]"}`}
+          className={`flex-1 py-2 flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-all ${method === "STRIPE" ? "bg-card shadow-sm text-foreground" : "text-muted"}`}
         >
           <CreditCard size={16} /> Card
         </button>
         <button 
           onClick={() => setMethod("CRYPTO")}
-          className={`flex-1 py-2 flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-all ${method === "CRYPTO" ? "bg-white shadow-sm text-[#111111]" : "text-[#6B7280]"}`}
+          className={`flex-1 py-2 flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-all ${method === "CRYPTO" ? "bg-card shadow-sm text-foreground" : "text-muted"}`}
         >
           <Bitcoin size={16} /> Crypto
         </button>
@@ -64,29 +64,40 @@ export default function FundingPanel() {
 
       <div className="space-y-5 flex-1">
         <div>
-          <label className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-2 block">Deposit Amount (USD)</label>
+          <label className="text-xs font-semibold text-muted uppercase tracking-wider mb-2 block">Deposit Amount (USD)</label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6B7280]">$</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted">$</span>
             <input 
               type="number" 
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-xl pl-8 pr-4 py-3 text-lg font-mono focus:outline-none focus:border-[#836EF9] transition-colors"
+              className="w-full bg-background border border-border rounded-xl pl-8 pr-4 py-3 text-lg font-mono focus:outline-none focus:border-accent transition-colors"
             />
+          </div>
+          <div className="flex gap-2 mt-3">
+            {[100, 500, 1000, 5000].map((val) => (
+              <button
+                key={val}
+                onClick={() => setAmount(val.toString())}
+                className="flex-1 py-1.5 text-xs font-medium rounded-lg border border-border text-muted hover:text-foreground hover:bg-muted/10 transition-colors"
+              >
+                ${val}
+              </button>
+            ))}
           </div>
         </div>
 
         {method === "STRIPE" && (
           <div className="space-y-3">
-            <label className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider block">Card Details</label>
-            <div className="p-4 rounded-xl border border-[#E5E7EB] bg-[#FAFAFA] space-y-4">
+            <label className="text-xs font-semibold text-muted uppercase tracking-wider block">Card Details</label>
+            <div className="p-4 rounded-xl border border-border bg-background space-y-4">
               {/* Fake Stripe Element UI for visual fidelity without requiring client secret */}
               <div className="flex items-center gap-3">
                 <CreditCard size={20} className="text-[#9CA3AF]" />
                 <input type="text" placeholder="Card number" className="bg-transparent outline-none text-sm w-full font-mono placeholder:font-sans" />
               </div>
-              <div className="flex gap-4 border-t border-[#E5E7EB] pt-3">
+              <div className="flex gap-4 border-t border-border pt-3">
                 <input type="text" placeholder="MM / YY" className="bg-transparent outline-none text-sm w-1/2 font-mono placeholder:font-sans" />
                 <input type="text" placeholder="CVC" className="bg-transparent outline-none text-sm w-1/2 font-mono placeholder:font-sans" />
               </div>
@@ -98,13 +109,13 @@ export default function FundingPanel() {
         )}
 
         {method === "CRYPTO" && (
-          <div className="p-4 rounded-xl border border-[#E5E7EB] bg-[#FAFAFA] flex flex-col items-center justify-center text-center">
-            <div className="w-32 h-32 bg-white rounded-lg p-2 mb-3 border border-[#E5E7EB]">
+          <div className="p-4 rounded-xl border border-border bg-background flex flex-col items-center justify-center text-center">
+            <div className="w-32 h-32 bg-card rounded-lg p-2 mb-3 border border-border">
               {/* Placeholder for QR Code */}
-              <div className="w-full h-full bg-[#F3F4F6] flex items-center justify-center text-[#9CA3AF]">QR</div>
+              <div className="w-full h-full bg-muted/10 flex items-center justify-center text-[#9CA3AF]">QR</div>
             </div>
-            <p className="text-xs text-[#6B7280] mb-1">Send USDC on Monad Testnet</p>
-            <p className="text-[10px] font-mono break-all text-[#111111] bg-white px-2 py-1 border border-[#E5E7EB] rounded">
+            <p className="text-xs text-muted mb-1">Send USDC on Monad Testnet</p>
+            <p className="text-[10px] font-mono break-all text-foreground bg-card px-2 py-1 border border-border rounded">
               0x742d35Cc6634C0532925a3b844Bc454e4438f44e
             </p>
           </div>
@@ -115,7 +126,7 @@ export default function FundingPanel() {
           onClick={handleDeposit}
           disabled={!amount || isProcessing}
           className={`w-full mt-6 py-3 rounded-xl font-medium text-white transition-all flex items-center justify-center gap-2 ${
-            !amount ? "bg-[#D1D5DB] cursor-not-allowed" : "bg-[#111111] hover:bg-black"
+            !amount ? "bg-[#D1D5DB] cursor-not-allowed" : "bg-foreground hover:bg-black"
           }`}
         >
           {isProcessing ? "Processing..." : `Simulate Mock Deposit ($${amount || "0"})`} <ArrowRight size={16} />
@@ -127,13 +138,13 @@ export default function FundingPanel() {
             initial={{ opacity: 0, scale: 0.95 }} 
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center p-6 text-center"
+            className="absolute inset-0 bg-card z-20 flex flex-col items-center justify-center p-6 text-center"
           >
-            <div className="w-16 h-16 bg-[#16A34A]/10 text-[#16A34A] rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center mb-4">
               <CheckCircle2 size={32} />
             </div>
             <h4 className="font-semibold text-lg mb-1">Deposit Successful</h4>
-            <p className="text-sm text-[#6B7280]">Your funds are now available for AI trading.</p>
+            <p className="text-sm text-muted">Your funds are now available for AI trading.</p>
           </motion.div>
         )}
       </AnimatePresence>

@@ -190,27 +190,27 @@ export default function MonadTradingChart() {
             <select 
               value={symbol}
               onChange={(e) => setSymbol(e.target.value as "MON/USD" | "ETH/USD")}
-              className="bg-transparent text-xl font-semibold outline-none cursor-pointer hover:text-[#836EF9] transition-colors"
+              className="bg-transparent text-xl font-semibold outline-none cursor-pointer hover:text-accent transition-colors"
             >
               <option value="MON/USD">MON/USD</option>
               <option value="ETH/USD">ETH/USD</option>
             </select>
-            <span className="text-xs bg-[#E5E7EB] text-[#111111] px-2 py-0.5 rounded-md font-medium">LIVE</span>
+            <span className="text-xs bg-border text-foreground px-2 py-0.5 rounded-md font-medium">LIVE</span>
           </div>
-          <p className="text-sm text-[#6B7280]">
-            Real-time Pyth Oracle Price: <span className="font-mono text-[#111111]">${currentPrice ? currentPrice.toFixed(4) : "---"}</span>
+          <p className="text-sm text-muted">
+            Real-time Pyth Oracle Price: <span className="font-mono text-foreground">${currentPrice ? currentPrice.toFixed(4) : "---"}</span>
           </p>
         </div>
         
-        <div className="flex items-center bg-[#F3F4F6] p-1 rounded-lg">
+        <div className="flex items-center bg-muted/10 p-1 rounded-lg">
           {(["LIVE", "1M", "2M"] as const).map((range) => (
             <button
               key={range}
               onClick={() => setTimeRange(range)}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
                 timeRange === range 
-                  ? "bg-white text-[#836EF9] shadow-sm" 
-                  : "text-[#6B7280] hover:text-[#111111]"
+                  ? "bg-card text-accent shadow-sm" 
+                  : "text-muted hover:text-foreground"
               }`}
             >
               {range}
@@ -220,8 +220,8 @@ export default function MonadTradingChart() {
       </div>
       <div className="flex-1 w-full relative">
         {isLoading && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/50 backdrop-blur-sm">
-            <div className="animate-spin w-8 h-8 border-4 border-[#E5E7EB] border-t-[#836EF9] rounded-full" />
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-card/50 backdrop-blur-sm">
+            <div className="animate-spin w-8 h-8 border-4 border-border border-t-accent rounded-full" />
           </div>
         )}
         <div ref={chartContainerRef} className="absolute inset-0" />
