@@ -2,6 +2,7 @@
   "name": "monad-ai-agent",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Autonomous DeFi trading agent scaffold for Monad testnet.",
   "scripts": {
     "compile": "hardhat compile",
@@ -10,9 +11,13 @@
     "test": "hardhat test"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/edr-win32-arm64-msvc": "^0.3.4",
+    "@nomicfoundation/hardhat-chai-matchers": "^3.0.0",
+    "@nomicfoundation/hardhat-ethers": "^4.0.14",
+    "@nomicfoundation/hardhat-network-helpers": "^3.0.11",
+    "@nomicfoundation/hardhat-verify": "^3.0.21",
+    "@nomicfoundation/solidity-analyzer-win32-arm64-msvc": "^0.1.1",
     "dotenv": "^16.4.5",
-    "hardhat": "^2.22.10"
+    "hardhat": "^3.9.1"
   }
 }
-

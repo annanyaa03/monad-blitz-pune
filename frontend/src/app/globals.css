@@ -1,69 +1,54 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", sans-serif;
-  
-  /* Light mode tokens */
+  --font-sans: var(--font-inter);
   --color-background: var(--bg);
   --color-foreground: var(--fg);
-  --color-muted: var(--muted-color);
-  --color-border: var(--border-color);
-  --color-card: var(--card-bg);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
   --color-accent: #836EF9; /* Monad Purple */
   --color-success: #16A34A;
   --color-danger: #DC2626;
-  --color-warning: #F59E0B;
-  --color-live: #10B981;
+  --color-card: var(--card);
 }
 
 @layer base {
   :root {
     --bg: #FAFAFA;
     --fg: #111111;
-    --muted-color: #6B7280;
-    --border-color: #E5E7EB;
-    --card-bg: #FFFFFF;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --card: #FFFFFF;
   }
-
+  
   .dark {
     --bg: #111111;
     --fg: #FAFAFA;
-    --muted-color: #9CA3AF;
-    --border-color: #374151;
-    --card-bg: #1F2937;
+    --muted: #9CA3AF;
+    --border: #374151;
+    --card: #1F2937;
   }
+}
 
+@layer base {
   * {
-    border-color: var(--border-color);
+    border-color: var(--color-border);
   }
-
   body {
-    background-color: var(--bg);
-    color: var(--fg);
-    font-family: var(--font-sans);
-  }
-
-  /* Lenis smooth scroll */
-  html.lenis, html.lenis body {
-    height: auto;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
+  /* Modern Typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+    font-weight: 500;
   }
   
-  .lenis.lenis-smooth [data-lenis-prevent] {
-    overscroll-behavior: contain;
-  }
-  
-  .lenis.lenis-stopped {
-    overflow: hidden;
-  }
-  
-  .lenis.lenis-smooth iframe {
-    pointer-events: none;
-  }
-
+  /* Scrollbar hide utility for minimal feel */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -71,4 +56,25 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }

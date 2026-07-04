@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldAlert, Lock, Unlock, Loader2 } from "lucide-react";
+import { ShieldAlert, ShieldCheck, Loader2, Activity } from "lucide-react";
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from "wagmi";
 import { SharedState } from "@/hooks/useDashboardState";
 
@@ -27,7 +27,7 @@ export default function KillSwitch({ state }: { state?: SharedState }) {
   const isLocked = ks?.status !== "ACTIVE" && ks?.status !== "unknown";
   const dailyLimit = ks?.daily_cap || 0;
   const currentUsage = ks?.traded_today || 0;
-  const usagePercent = dailyLimit > 0 ? (currentUsage / dailyLimit) * 100 : 0;
+  const usagePercent = dailyLimit > 0 ? Math.min((currentUsage / dailyLimit) * 100, 100) : 0;
   
   const formatMoney = (val: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -53,90 +53,91 @@ export default function KillSwitch({ state }: { state?: SharedState }) {
 
   const isButtonDisabled = isPending || isConfirming || !isConnected;
 
+  const getHealthColor = () => {
+    if (isLocked) return "text-[#DC2626]";
+    if (usagePercent > 80) return "text-[#F59E0B]";
+    return "text-[#16A34A]";
+  };
+
   return (
-    <div className="h-full flex flex-col justify-between">
-      <div className="flex items-center justify-between z-10 relative">
-        <div className="flex items-center gap-2">
-          <ShieldAlert className={isLocked ? "text-danger" : "text-success"} size={24} />
-          <h3 className="font-semibold text-lg">KillSwitch Module</h3>
+    <div className="h-full flex flex-col justify-between w-full bg-card relative overflow-hidden">
+      <div className="flex items-center justify-between z-10 relative mb-8">
+        <div>
+          <h3 className="font-semibold text-lg text-foreground">Daily Limit</h3>
+          <p className="text-sm text-muted">Risk Management Contract</p>
         </div>
-        <div className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 ${isLocked ? "bg-danger/20 text-danger" : "bg-success/20 text-success"}`}>
-          <div className={`w-1.5 h-1.5 rounded-full ${isLocked ? "bg-danger" : "bg-success animate-pulse"}`} />
+        <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-2 border ${isLocked ? "bg-[#FEF2F2] border-[#FCA5A5] text-[#DC2626]" : "bg-[#F0FDF4] border-[#86EFAC] text-[#16A34A]"}`}>
+          {isLocked ? <ShieldAlert size={14} /> : <ShieldCheck size={14} />}
           {isLocked ? `LOCKED: ${ks?.status}` : "SYSTEM ACTIVE"}
         </div>
       </div>
 
-      <div className="flex items-center justify-center my-8 relative z-10">
-        <button 
-          onClick={handleToggle}
-          disabled={isButtonDisabled}
-          className={`w-32 h-32 rounded-full border-4 flex items-center justify-center shadow-2xl transition-colors duration-500 relative z-20 ${
-            isLocked ? "border-danger bg-danger/10 hover:bg-danger/20" : "border-[#333333] bg-[#1a1a1a] hover:bg-[#222]"
-          } ${isButtonDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-        >
-          {isPending || isConfirming ? (
-            <Loader2 size={40} className={`animate-spin ${isLocked ? "text-danger" : "text-muted"}`} />
-          ) : isLocked ? (
-            <Lock size={40} className="text-danger" />
-          ) : (
-            <Unlock size={40} className="text-muted" />
-          )}
-        </button>
-
-        {/* Rotating rings when active */}
-        {!isLocked && (
-          <>
-            <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-              className="absolute w-40 h-40 rounded-full border border-dashed border-[#6B7280]/50 z-10"
+      <div className="flex items-center justify-center my-6 relative z-10">
+        <div className="relative w-48 h-48 flex items-center justify-center">
+          <svg className="w-full h-full transform -rotate-90">
+            <circle cx="96" cy="96" r="80" stroke="#F3F4F6" strokeWidth="12" fill="none" />
+            <motion.circle 
+              cx="96" cy="96" r="80" 
+              stroke={usagePercent > 80 ? "#F59E0B" : isLocked ? "#DC2626" : "#836EF9"} 
+              strokeWidth="12" 
+              fill="none"
+              strokeDasharray="502.6"
+              initial={{ strokeDashoffset: 502.6 }}
+              animate={{ strokeDashoffset: 502.6 * (1 - (usagePercent / 100)) }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              strokeLinecap="round"
             />
-            <motion.div 
-              animate={{ rotate: -360 }}
-              transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
-              className="absolute w-48 h-48 rounded-full border border-[#333333] z-10"
-            />
-          </>
-        )}
+          </svg>
+          <div className="absolute flex flex-col items-center justify-center text-center">
+            <span className="text-3xl font-mono font-medium tracking-tight text-foreground">{Math.round(usagePercent)}%</span>
+            <span className="text-xs text-muted uppercase tracking-widest mt-1">Capacity</span>
+          </div>
+        </div>
       </div>
 
-      <div className="space-y-4 z-10 relative">
-        <div>
-          <div className="flex justify-between text-xs mb-1 text-[#a1a1aa]">
-            <span>Daily Trading Limit</span>
-            <span className="font-mono">{formatMoney(currentUsage)} / {formatMoney(dailyLimit)}</span>
+      <div className="space-y-6 z-10 relative mt-4">
+        <div className="flex justify-between items-end border-b border-border/50 pb-4">
+          <div>
+            <p className="text-xs text-muted uppercase tracking-wider mb-1">Remaining Capacity</p>
+            <p className="font-mono text-lg font-medium">{formatMoney(Math.max(0, dailyLimit - currentUsage))}</p>
           </div>
-          <div className="w-full h-1.5 bg-[#333333] rounded-full overflow-hidden">
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: `${usagePercent}%` }}
-              transition={{ duration: 1, delay: 0.2 }}
-              className={`h-full ${usagePercent > 80 ? "bg-danger" : "bg-accent"}`}
-            />
+          <div className="text-right">
+            <p className="text-xs text-muted uppercase tracking-wider mb-1">Daily Cap</p>
+            <p className="font-mono text-lg text-foreground">{formatMoney(dailyLimit)}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-[#1a1a1a] rounded-xl p-3 border border-[#333333]">
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Paused</p>
-            <p className="font-mono text-sm font-medium">{ks?.paused ? "YES" : "NO"}</p>
-          </div>
-          <div className="bg-[#1a1a1a] rounded-xl p-3 border border-[#333333]">
+          <div className="bg-background rounded-xl p-4 border border-border">
             <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Cooldown</p>
-            <p className="font-mono text-sm font-medium text-success">{ks?.cooldown_seconds || 0}s</p>
+            <p className="font-mono text-base font-medium">{ks?.cooldown_seconds || 0}s</p>
+          </div>
+          <div className="bg-background rounded-xl p-4 border border-border">
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Health</p>
+            <div className={`flex items-center gap-1.5 font-medium text-sm ${getHealthColor()}`}>
+              <Activity size={14} /> {isLocked ? "CRITICAL" : usagePercent > 80 ? "WARNING" : "OPTIMAL"}
+            </div>
           </div>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-[#333333] flex justify-between items-center">
-          <span className="text-[10px] text-muted uppercase tracking-wider">Contract Address</span>
-          <span className="font-mono text-xs text-[#a1a1aa] truncate max-w-[150px]" title={state?.contracts?.killSwitch}>
-            {state?.contracts?.killSwitch ? `${state.contracts.killSwitch.substring(0, 6)}...${state.contracts.killSwitch.substring(38)}` : "Not Connected"}
-          </span>
-        </div>
+        <button 
+          onClick={handleToggle}
+          disabled={isButtonDisabled}
+          className={`w-full py-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
+            isLocked 
+              ? "bg-foreground hover:bg-black text-background" 
+              : "bg-card border border-border hover:bg-[#FEF2F2] hover:border-[#FCA5A5] hover:text-[#DC2626] text-muted"
+          } ${isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+        >
+          {isPending || isConfirming ? (
+            <Loader2 size={18} className="animate-spin" />
+          ) : isLocked ? (
+            "Authorize System Reset"
+          ) : (
+            "Manual Override (Pause)"
+          )}
+        </button>
       </div>
-      
-      {/* Background glow */}
-      <div className={`absolute -bottom-24 -right-24 w-64 h-64 rounded-full blur-[100px] transition-colors duration-1000 ${isLocked ? "bg-danger/20" : "bg-accent/10"}`} />
     </div>
   );
 }

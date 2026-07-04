@@ -36,7 +36,7 @@ export default function FundingPanel() {
 
       {!isConnected ? (
         <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4">
-          <div className="w-16 h-16 bg-muted/10 rounded-full flex items-center justify-center text-[#9CA3AF] mb-2">
+          <div className="w-16 h-16 bg-muted/20 rounded-full flex items-center justify-center text-[#9CA3AF] mb-2">
             <Lock size={24} />
           </div>
           <div>
@@ -47,7 +47,7 @@ export default function FundingPanel() {
         </div>
       ) : (
         <>
-          <div className="flex gap-2 mb-6 p-1 bg-muted/10 rounded-xl">
+          <div className="flex gap-2 mb-6 p-1 bg-muted/20 rounded-xl">
         <button 
           onClick={() => setMethod("STRIPE")}
           className={`flex-1 py-2 flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-all ${method === "STRIPE" ? "bg-card shadow-sm text-foreground" : "text-muted"}`}
@@ -72,19 +72,8 @@ export default function FundingPanel() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-background border border-border rounded-xl pl-8 pr-4 py-3 text-lg font-mono focus:outline-none focus:border-accent transition-colors"
+              className="w-full bg-background border border-border rounded-xl pl-8 pr-4 py-3 text-lg font-mono focus:outline-none focus:border-[#836EF9] transition-colors"
             />
-          </div>
-          <div className="flex gap-2 mt-3">
-            {[100, 500, 1000, 5000].map((val) => (
-              <button
-                key={val}
-                onClick={() => setAmount(val.toString())}
-                className="flex-1 py-1.5 text-xs font-medium rounded-lg border border-border text-muted hover:text-foreground hover:bg-muted/10 transition-colors"
-              >
-                ${val}
-              </button>
-            ))}
           </div>
         </div>
 
@@ -112,7 +101,7 @@ export default function FundingPanel() {
           <div className="p-4 rounded-xl border border-border bg-background flex flex-col items-center justify-center text-center">
             <div className="w-32 h-32 bg-card rounded-lg p-2 mb-3 border border-border">
               {/* Placeholder for QR Code */}
-              <div className="w-full h-full bg-muted/10 flex items-center justify-center text-[#9CA3AF]">QR</div>
+              <div className="w-full h-full bg-muted/20 flex items-center justify-center text-[#9CA3AF]">QR</div>
             </div>
             <p className="text-xs text-muted mb-1">Send USDC on Monad Testnet</p>
             <p className="text-[10px] font-mono break-all text-foreground bg-card px-2 py-1 border border-border rounded">
@@ -125,7 +114,7 @@ export default function FundingPanel() {
         <button 
           onClick={handleDeposit}
           disabled={!amount || isProcessing}
-          className={`w-full mt-6 py-3 rounded-xl font-medium text-white transition-all flex items-center justify-center gap-2 ${
+          className={`w-full mt-6 py-3 rounded-xl font-medium text-background transition-all flex items-center justify-center gap-2 ${
             !amount ? "bg-[#D1D5DB] cursor-not-allowed" : "bg-foreground hover:bg-black"
           }`}
         >
@@ -140,7 +129,7 @@ export default function FundingPanel() {
             exit={{ opacity: 0 }}
             className="absolute inset-0 bg-card z-20 flex flex-col items-center justify-center p-6 text-center"
           >
-            <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-[#16A34A]/10 text-[#16A34A] rounded-full flex items-center justify-center mb-4">
               <CheckCircle2 size={32} />
             </div>
             <h4 className="font-semibold text-lg mb-1">Deposit Successful</h4>

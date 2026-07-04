@@ -6,8 +6,8 @@ import User from "@/models/User";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
     }),
   ],
   session: {
@@ -32,30 +32,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             existingUser.lastLogin = new Date();
             await existingUser.save();
           }
-          return true;
         } catch (error) {
-          console.error("Error saving user to database:", error);
-          return false;
+          // Log error but DO NOT block sign-in — MongoDB issues should not prevent login
+          console.error("Warning: Could not save user to database:", error);
         }
+        return true; // Always allow Google sign-in regardless of DB status
       }
       return false;
     },
     async jwt({ token, user, trigger, session }) {
       // Fetch the wallet address from MongoDB during initial login
       if (user) {
-        await connectToDatabase();
-        const dbUser = await User.findOne({ email: user.email }).lean();
-        if (dbUser) {
-          token.sub = dbUser._id.toString(); // Map MongoDB _id to sub
-          token.walletAddress = dbUser.walletAddress;
+        try {
+          await connectToDatabase();
+          const dbUser = await User.findOne({ email: user.email }).lean();
+          if (dbUser) {
+            token.sub = dbUser._id.toString(); // Map MongoDB _id to sub
+            token.walletAddress = dbUser.walletAddress;
+          }
+        } catch (error) {
+          console.error("Warning: Could not fetch user from database:", error);
         }
       }
-      
+
       // Update the token walletAddress when a specific trigger is fired from client side
       if (trigger === "update" && session?.walletAddress !== undefined) {
         token.walletAddress = session.walletAddress;
       }
-      
+
       return token;
     },
     async session({ session, token }) {

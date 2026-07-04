@@ -62,7 +62,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   // 3. Fallback Developer UI if WalletConnect ID is missing
   if (!projectId || !config) {
     return (
-      <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
         <div className="bg-[#FEF2F2] text-[#991B1B] p-6 rounded-3xl max-w-lg border border-[#FCA5A5] shadow-sm">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-16 bg-[#FEE2E2] rounded-full flex items-center justify-center text-[#DC2626]">
@@ -73,10 +73,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <p className="text-sm mb-4">
             The Web3 wallet connection layer requires a valid <strong>WalletConnect Project ID</strong> to initialize securely. No fallback IDs are allowed.
           </p>
-          <div className="text-left bg-white p-4 rounded-xl border border-[#FCA5A5] mb-4">
+          <div className="text-left bg-card p-4 rounded-xl border border-[#FCA5A5] mb-4">
             <p className="text-xs font-mono mb-2">1. Get a free Project ID from <a href="https://cloud.walletconnect.com/" target="_blank" rel="noreferrer" className="underline font-bold text-[#DC2626]">WalletConnect Cloud</a></p>
             <p className="text-xs font-mono">2. Add it to your <span className="bg-[#FEE2E2] px-1 rounded">frontend/.env.local</span> file:</p>
-            <code className="block bg-[#F9FAFB] p-2 mt-2 text-xs border border-[#E5E7EB] rounded text-[#111111]">
+            <code className="block bg-[#F9FAFB] p-2 mt-2 text-xs border border-border rounded text-foreground">
               NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
             </code>
           </div>
@@ -87,11 +87,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <SessionProvider>
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
-            <RainbowKitProvider showRecentTransactions={true}>
+            <RainbowKitProvider>
               <WalletSync />
               {children}
             </RainbowKitProvider>

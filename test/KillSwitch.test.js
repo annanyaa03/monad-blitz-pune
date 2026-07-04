@@ -1,6 +1,8 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
-const { time } = require("@nomicfoundation/hardhat-network-helpers");
+import { expect } from "chai";
+import hardhat from "hardhat";
+import networkHelpers from "@nomicfoundation/hardhat-network-helpers";
+const { ethers } = hardhat;
+const { time } = networkHelpers;
 
 describe("KillSwitch", function () {
   async function deployFixture() {
@@ -88,5 +90,54 @@ describe("KillSwitch", function () {
     await expect(
       killSwitch.executeTrade(0, ethers.parseUnits("10", 18), await target.getAddress(), calldata)
     ).to.be.revertedWithCustomError(killSwitch, "ContractPaused");
+  });
+
+  it("approves token spending and emits TokenApprovalSet", async function () {
+    const { killSwitch, stranger } = await deployFixture();
+    const mockERC20Factory = await ethers.getContractFactory("MockERC20");
+    const mockERC20 = await mockERC20Factory.deploy();
+    await mockERC20.waitForDeployment();
+
+    const amount = ethers.parseUnits("500", 18);
+    const killSwitchAddr = await killSwitch.getAddress();
+    const tokenAddr = await mockERC20.getAddress();
+
+    await expect(killSwitch.approveToken(tokenAddr, stranger.address, amount))
+      .to.emit(killSwitch, "TokenApprovalSet")
+      .withArgs(tokenAddr, stranger.address, amount);
+
+    expect(await mockERC20.allowance(killSwitchAddr, stranger.address)).to.equal(amount);
+  });
+
+  it("reverts approveToken when called by non-owner", async function () {
+    const { killSwitch, stranger } = await deployFixture();
+    const mockERC20Factory = await ethers.getContractFactory("MockERC20");
+    const mockERC20 = await mockERC20Factory.deploy();
+    await mockERC20.waitForDeployment();
+
+    const amount = ethers.parseUnits("500", 18);
+    const tokenAddr = await mockERC20.getAddress();
+
+    await expect(
+      killSwitch.connect(stranger).approveToken(tokenAddr, stranger.address, amount)
+    ).to.be.revertedWithCustomError(killSwitch, "NotOwner");
+  });
+
+  it("reverts approveToken for zero address token or spender", async function () {
+    const { killSwitch, stranger } = await deployFixture();
+    const amount = ethers.parseUnits("500", 18);
+
+    await expect(
+      killSwitch.approveToken(ethers.ZeroAddress, stranger.address, amount)
+    ).to.be.revertedWithCustomError(killSwitch, "InvalidTarget");
+
+    const mockERC20Factory = await ethers.getContractFactory("MockERC20");
+    const mockERC20 = await mockERC20Factory.deploy();
+    await mockERC20.waitForDeployment();
+    const tokenAddr = await mockERC20.getAddress();
+
+    await expect(
+      killSwitch.approveToken(tokenAddr, ethers.ZeroAddress, amount)
+    ).to.be.revertedWithCustomError(killSwitch, "InvalidTarget");
   });
 });

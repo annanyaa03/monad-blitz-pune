@@ -43,9 +43,9 @@ export type SharedState = {
     ema5: number | null;
     ema20: number | null;
     marketTrend: string;
-    avgConfidence: number | null;
-    winRate: number | null;
-    riskLevel: string | null;
+    avgConfidence: number;
+    winRate: number;
+    riskLevel: string;
   };
   contracts?: {
     killSwitch: string;

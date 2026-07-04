@@ -1,4 +1,6 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+import hre from "hardhat";
+dotenv.config();
 
 async function main() {
   const config = {

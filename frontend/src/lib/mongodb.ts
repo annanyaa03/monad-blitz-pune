@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import dns from "node:dns";
+
+// Fix for Node 18+ Windows issue with MongoDB SRV records (ECONNREFUSED)
+dns.setDefaultResultOrder("ipv4first");
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -25,6 +29,7 @@ async function connectToDatabase() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      family: 4, // Force IPv4 to fix DNS resolution issues with SRV records on Windows
     };
 
     cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
